@@ -7,12 +7,14 @@
            and uncomment the following Encore helpers to start using Symfony UX #}
         {% block stylesheets %}
             {#{{ encore_entry_link_tags('app') }}#}
+            <link rel="stylesheet" href="https://bootswatch.com/5/lumen/bootstrap.min.css">
         {% endblock %}
 
         {% block javascripts %}
             {#{{ encore_entry_script_tags('app') }}#}
         {% endblock %}
     </head>
+    <h1 class="text-center m-5">AutoGraph</h1>
     <body>
         {% block body %}{% endblock %}
     </body>
