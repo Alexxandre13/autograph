@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	<p class="container">
+	<p class="container text-center">
 		<a href="">Créer un véhicule +</a>
 	</p>
 	<div class="container">
@@ -25,12 +25,18 @@
 						<td>{{ v.id }}</td>
 						<td>{{ v.name }}</td>
 						<td>{{ v.license }}</td>
-						<td>{{ v.status.description }}</td>
 						<td>
-							<a href="">Editer ?</a>
+							<select class="form-select js-vehicule-status" id="vehicule-status-{{ v.id }}">
+								{% for s in statuses %}
+									<option {% if s.id == v.status.id %} selected {% endif %} value="{{ s.id }}">{{ s.description }}</option>
+								{% endfor %}
+							</select>
 						</td>
 						<td>
-							<a href="">Supprimer ?</a>
+							<a href="{{ path('carUpdate', {'id': v.id}) }}">Editer ?</a>
+						</td>
+						<td>
+							<a href="{{ path('carDelete', {'id': v.id}) }}">Supprimer ?</a>
 						</td>
 					</tr>
 				{% endfor %}
