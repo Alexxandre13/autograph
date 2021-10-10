@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AutoGraph
+{% endblock %}
+
+{% block body %}
+
+	<div class="container">
+		{{ form_start(formView) }}
+        {{ form_errors(formView) }}
+		{{ form_widget(formView)}}
+		<button type="submit" class="btn btn-primary mt-4">Sauvegarder</button>
+		{{ form_end(formView) }}
+	</div>
+
+{% endblock %}
