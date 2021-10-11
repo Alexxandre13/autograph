@@ -24,8 +24,10 @@ class PiecesAuto
     {
         $res = $this->client->request('GET', self::$urlLicense . $license);
 
-        if ($res->getStatusCode() === 200) {
+        if ($res->getStatusCode() === 200 && isset(json_decode($res->getContent())->carId)) {
             return json_decode($res->getContent())->carId;
+        } else {
+            return self::$urlLink;
         }
     }
 
