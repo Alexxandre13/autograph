@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AutoGraph
+{% endblock %}
+
+{% block body %}
+
+<h4 class="text-center">Editer le véhicule : {{ vehicule.name }}</h4>
+
+	{% include "car/_form.html.twig" %}
+
+{% endblock %}

@@ -8,13 +8,13 @@
 		<a href="{{ path('carCreate') }}">Créer un véhicule +</a>
 	</p>
 	<div class="container">
-		<table class="table table-hover">
+		<table class="table">
 			<thead>
-				<tr class="table-dark">
+				<tr class="table-primary">
 					<th scope="col">#</th>
 					<th scope="col">Nom</th>
 					<th scope="col">Immatriculation</th>
-					<th scope="col">Statut</th>
+					<th scope="col">Etat du véhicule</th>
 					<th scope="col">Editer</th>
 					<th scope="col">Supprimer</th>
 					<th scope="col">Trouver des pièces</th>
@@ -27,28 +27,33 @@
 						<td>{{ v.name }}</td>
 						<td>{{ v.license }}</td>
 						<td>
-							<select class="form-select js-vehicule-status" id="js-vehicule-status-{{ v.id }}">
+							<select class="form-control js-vehicule-status" id="js-vehicule-status-{{ v.id }}">
 								{% for s in statuses %}
 									<option {% if s.id == v.status.id %} selected {% endif %} value="{{ s.id }}">{{ s.description }}</option>
 								{% endfor %}
 							</select>
 						</td>
 						<td>
-							<a href="{{ path('carUpdate', {'id': v.id}) }}">Editer ?</a>
+							<a href="{{ path('carUpdate', {'id': v.id}) }}" class="">
+								{% include "car/svg/_edit_icon.html.twig" %}
+							</a>
 						</td>
 						<td>
-							<a href="{{ path('carDelete', {'id': v.id}) }}" onclick="return confirm('Etes-vous sûr de vouloir supprimer le véhicule {{ v.name }} ?')">Supprimer ?</a>
+							<a href="{{ path('carDelete', {'id': v.id}) }}" onclick="return confirm('Etes-vous sûr de vouloir supprimer le véhicule {{ v.name }} ?')">
+								{% include "car/svg/_delete_icon.html.twig" %}
+							</a>
 						</td>
 						<td>
-							<a href="{{ v.paLink }}" target="_blank">Trouver des pièces</a>
+							<a href="{{ v.piecesAutoLink }}" target="_blank">
+								www.PiecesAuto.com
+							</a>
 						</td>
 					</tr>
 				{% endfor %}
 			</tbody>
 		</table>
 	</div>
-	<div class="alert alert-dismissible alert-success" id="changeStatusSuccess">
-		Le statut du véhicule a bien été modifié !
-	</div>
 
+	{# Javascript Message #}
+	<div class="alert custom-message" id="js-changeStatus"></div>
 {% endblock %}

@@ -1,7 +1,11 @@
 @import "~bootstrap/scss/bootstrap";
 
-#changeStatusSuccess {
-    display: none;
-    position: absolute;
+.custom-message {
+    position: fixed;
     top: 0;
+    padding: 20px;
+
+    #js-changeStatus {
+        display: none;
+    }
 }

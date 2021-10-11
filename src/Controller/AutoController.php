@@ -11,43 +11,30 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 
 class AutoController extends AbstractController
 {
     public function __construct(
         VehiculeRepository $vehiculeRepo,
         StatusRepository $statusRepo,
-        EntityManagerInterface $em,
-        PiecesAuto $pa
-    ) {
+        EntityManagerInterface $em    ) {
         $this->vehiculeRepo = $vehiculeRepo;
         $this->statusRepo = $statusRepo;
         $this->em = $em;
-        $this->pa = $pa;
     }
 
     /**
      * @Route("/", name="carIndex")
      */
-    public function index(CacheInterface $cache): Response
+    public function index(PiecesAuto $piecesAuto): Response
     {
         $vehicules = $this->vehiculeRepo->findAll();
 
         foreach ($vehicules as $v) {
-
-            // Utilisation du cache
-            $v->paLink = $cache->get('PiecesAuto-' . $v->getId(), function (ItemInterface $item) use ($v){
-                
-                // Expire après une semaine !
-                $item->expiresAfter(604800);
-
-                return $this->pa->generateLink($v->getLicense());
-            });
+            $v->piecesAutoLink = $piecesAuto->generateLink($v->getLicense());
         }
 
-        return $this->render('auto/index.html.twig', [
+        return $this->render('car/index.html.twig', [
             'vehicules' => $vehicules,
             'statuses' => $this->statusRepo->findAll()
         ]);
@@ -68,10 +55,12 @@ class AutoController extends AbstractController
             $this->em->persist($vehicule);
             $this->em->flush();
 
+            $this->addFlash('success', "Le véhicule {$vehicule->getName()} a été créé.");
+
             return $this->redirectToRoute('carIndex');
         }
 
-        return $this->render('auto/create&update.html.twig', [
+        return $this->render('car/create.html.twig', [
             'formView' => $form->createView()
         ]);
     }
@@ -95,11 +84,14 @@ class AutoController extends AbstractController
             $this->em->persist($vehicule);
             $this->em->flush();
 
+            $this->addFlash('success', "Le véhicule {$vehicule->getName()} a été modifié.");
+
             return $this->redirectToRoute('carIndex');
         }
 
-        return $this->render('auto/create&update.html.twig', [
-            'formView' => $form->createView()
+        return $this->render('car/update.html.twig', [
+            'formView' => $form->createView(),
+            'vehicule' => $vehicule
         ]);
     }
 
@@ -114,6 +106,8 @@ class AutoController extends AbstractController
 
         $this->em->remove($vehicule);
         $this->em->flush();
+
+        $this->addFlash('success', "Le véhicule {$vehicule->getName()} a été supprimé.");
 
         return $this->redirectToRoute('carIndex');
     }
@@ -139,7 +133,9 @@ class AutoController extends AbstractController
         $this->em->flush();
 
         return $this->json([
-            'message' => "Le statut du véhicule {$vehicule->getName()} a bien été modifié."
+            'name' => $vehicule->getName(),
+            'license' => $vehicule->getLicense(),
+            'status' => $vehicule->getStatus()->getDescription()
         ], 200);
     }
 }
