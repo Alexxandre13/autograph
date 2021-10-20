@@ -20,7 +20,7 @@ class PiecesAuto
         $this->cache = $cache;
     }
 
-    private function getCarID(string $license)
+    private function getCarID(string $license): string
     {
         $res = $this->client->request('GET', self::$urlLicense . $license);
 
