@@ -1,7 +1,0 @@
-{% for class, messages in app.flashes %}
-	<div class="custom-message alert alert-{{ class }}">
-		{% for message in messages %}
-			{{ message }}
-		{% endfor %}
-	</div>
-{% endfor %}

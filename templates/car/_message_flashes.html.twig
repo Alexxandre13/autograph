@@ -1,0 +1,26 @@
+<div class="alert custom-message" id="js-changeStatus"></div>
+
+{% for key, messages in app.flashes %}
+	{% for message in messages %}
+		<div class="custom-message alert alert-success">
+			{% if key == 'successDelete' %}
+				Le véhicule
+				<strong>{{ message }}</strong>
+				a bien été
+				<strong>supprimé</strong>.
+			{% endif %}
+			{% if key == 'successCreate' %}
+				Le véhicule
+				<strong>{{ message }}</strong>
+				a été
+				<strong>créé</strong>.
+			{% endif %}
+			{% if key == 'successUpdate' %}
+				Le véhicule
+				<strong>{{ message }}</strong>
+				a été
+				<strong>mis à jour</strong>.
+			{% endif %}
+		</div>
+	{% endfor %}
+{% endfor %}

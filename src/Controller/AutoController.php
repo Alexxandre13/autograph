@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Vehicule;
 use App\Form\VehiculeType;
 use App\Service\PiecesAuto;
 use App\Repository\StatusRepository;
@@ -17,7 +18,8 @@ class AutoController extends AbstractController
     public function __construct(
         VehiculeRepository $vehiculeRepo,
         StatusRepository $statusRepo,
-        EntityManagerInterface $em    ) {
+        EntityManagerInterface $em
+    ) {
         $this->vehiculeRepo = $vehiculeRepo;
         $this->statusRepo = $statusRepo;
         $this->em = $em;
@@ -55,7 +57,7 @@ class AutoController extends AbstractController
             $this->em->persist($vehicule);
             $this->em->flush();
 
-            $this->addFlash('success', "Le véhicule {$vehicule->getName()} a été créé.");
+            $this->addFlash('successCreate', $vehicule->getName());
 
             return $this->redirectToRoute('carIndex');
         }
@@ -84,7 +86,7 @@ class AutoController extends AbstractController
             $this->em->persist($vehicule);
             $this->em->flush();
 
-            $this->addFlash('success', "Le véhicule {$vehicule->getName()} a été modifié.");
+            $this->addFlash('successUpdate', $vehicule->getName());
 
             return $this->redirectToRoute('carIndex');
         }
@@ -107,7 +109,7 @@ class AutoController extends AbstractController
         $this->em->remove($vehicule);
         $this->em->flush();
 
-        $this->addFlash('success', "Le véhicule {$vehicule->getName()} a été supprimé.");
+        $this->addFlash('successDelete', $vehicule->getName());
 
         return $this->redirectToRoute('carIndex');
     }

@@ -1,5 +1,7 @@
-document.querySelectorAll('.custom-message').forEach(m => {
-    setTimeout(() => {
-        m.style.display = 'none'
-    }, 4000)
+window.addEventListener('load', () => {
+    document.querySelectorAll('.custom-message').forEach(m => {
+        setTimeout(() => {
+            m.style.display = 'none'
+        }, 4000)
+    })
 })

@@ -39,7 +39,7 @@
 							</a>
 						</td>
 						<td>
-							<a href="{{ path('carDelete', {'id': v.id}) }}" onclick="return confirm('Etes-vous sûr de vouloir supprimer le véhicule {{ v.name }} ?')">
+							<a href="{{ path('carDelete', {'id': v.id}) }}" onclick="return confirm('Etes-vous sûr de vouloir supprimer le véhicule {{ v.name | escape('js') }} ?')">
 								{% include "car/svg/_delete_icon.html.twig" %}
 							</a>
 						</td>
@@ -54,6 +54,7 @@
 		</table>
 	</div>
 
-	{# Javascript Message #}
-	<div class="alert custom-message" id="js-changeStatus"></div>
+	{# Message Flash #}
+	{% include "car/_message_flashes.html.twig" %}
+
 {% endblock %}

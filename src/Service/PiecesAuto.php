@@ -9,7 +9,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class PiecesAuto
 {
     private static $urlLicense = "https://www.piecesauto.com/homepage/numberplate?value=";
-    private static $urlID = "https://www.piecesauto.com//common/seekCar?carid=";
+    private static $urlID = "https://www.piecesauto.com/common/seekCar?carid=";
     private static $urlLink = "https://www.piecesauto.com";
 
     private $client;
@@ -27,7 +27,7 @@ class PiecesAuto
         if ($res->getStatusCode() === 200 && isset(json_decode($res->getContent())->carId)) {
             return json_decode($res->getContent())->carId;
         } else {
-            return self::$urlLink;
+            return null;
         }
     }
 
