@@ -20,32 +20,27 @@ class PiecesAuto
         $this->cache = $cache;
     }
 
-    private function getCarID(string $license)
+    private function getCarID(string $license): string
     {
         $res = $this->client->request('GET', self::$urlLicense . $license);
 
-        if ($res->getStatusCode() === 200 && isset(json_decode($res->getContent())->carId)) {
-            return json_decode($res->getContent())->carId;
-        } else {
-            return null;
-        }
+        return $res->getStatusCode() === 200 && isset(json_decode($res->getContent())->carId) ?
+            json_decode($res->getContent())->carId : null;
     }
 
     private function getLink(string $cardId): string
     {
         $res = $this->client->request('GET', self::$urlID . $cardId);
 
-        if ($res->getStatusCode() === 200) {
-            return $res->getContent();
-        }
+        return $res->getStatusCode() === 200 ? $res->getContent() : null;
     }
 
     public function generateLink(string $license): string
     {
         return $this->cache->get('PiecesAuto-' . $license, function (ItemInterface $item) use ($license) {
 
-            // Expire après une semaine !
-            $item->expiresAfter(604800);
+            // Jours x Heures x minutes x secondes
+            $item->expiresAfter(7 * 24 * 60 * 60);
 
             $carId = $this->getCarID($license);
 
