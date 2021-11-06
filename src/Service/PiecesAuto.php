@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Vehicule;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -20,36 +21,61 @@ class PiecesAuto
         $this->cache = $cache;
     }
 
-    private function getCarID(string $license)
+    /**
+     * @param Vehicule[] $vehicules
+     */
+    public function handleVehicules(array $vehicules)
     {
-        $res = $this->client->request('GET', self::$urlLicense . $license);
-
-        return $res->getStatusCode() === 200 && isset(json_decode($res->getContent())->carId) ? json_decode($res->getContent())->carId : null;
+        foreach ($vehicules as $v) {
+            $v->piecesAutoLink = $this->generateLink($v);
+        }
+        return $vehicules;
     }
 
-    private function getLink(string $cardId)
+    private function getCarID(Vehicule $v)
+    {
+        $res = $this->client->request('GET', self::$urlLicense . $v->getLicense());
+
+        return $res->getStatusCode() === 200 &&
+            isset(json_decode($res->getContent())->carId)
+            ?
+            json_decode($res->getContent())->carId
+            :
+            null;
+    }
+
+    private function getUri(string $cardId)
     {
         $res = $this->client->request('GET', self::$urlID . $cardId);
 
         return $res->getStatusCode() === 200 ? $res->getContent() : null;
     }
 
-    public function generateLink(string $license): string
+    private function generateLink(Vehicule $v): string
     {
-        return $this->cache->get('PiecesAuto-' . $license, function (ItemInterface $item) use ($license) {
+        return $this->cache->get('PiecesAuto-' . $v->getLicense() . '-' . $v->getId(), function (ItemInterface $item) use ($v) {
 
             // Jours x Heures x minutes x secondes
-            $item->expiresAfter(7 * 24 * 60 * 60);
+            $item->expiresAfter(7 * 24 * 60 * 60); // En cache pour 1 semaine !
 
-            $carId = $this->getCarID($license);
+            $paCarId = $this->getCarID($v);
 
-            if ($carId === null) return self::$urlLink;
+            if ($paCarId === null) {
+                return $this->getDefaultLink();
+            };
 
-            $link = $this->getLink($carId);
+            $paUri = $this->getUri($paCarId);
 
-            if ($link === null) return self::$urlLink;
+            if ($paUri === null) {
+                return $this->getDefaultLink();
+            }
 
-            return self::$urlLink . $link;
+            return $this->getDefaultLink() . $paUri;
         });
+    }
+
+    private function getDefaultLink(): string
+    {
+        return self::$urlLink;
     }
 }

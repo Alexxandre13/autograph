@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Vehicule;
 use App\Form\VehiculeType;
 use App\Service\PiecesAuto;
 use App\Repository\StatusRepository;
@@ -30,14 +29,8 @@ class AutoController extends AbstractController
      */
     public function index(PiecesAuto $piecesAuto): Response
     {
-        $vehicules = $this->vehiculeRepo->findAll();
-
-        foreach ($vehicules as $v) {
-            $v->piecesAutoLink = $piecesAuto->generateLink($v->getLicense());
-        }
-
         return $this->render('car/index.html.twig', [
-            'vehicules' => $vehicules,
+            'vehicules' => $piecesAuto->handleVehicules($this->vehiculeRepo->findAll()),
             'statuses' => $this->statusRepo->findAll()
         ]);
     }
