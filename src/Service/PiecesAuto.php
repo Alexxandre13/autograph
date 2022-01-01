@@ -9,9 +9,9 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class PiecesAuto
 {
+    private static $urlLink = "https://www.piecesauto.com";
     private static $urlLicense = "https://www.piecesauto.com/homepage/numberplate?value=";
     private static $urlID = "https://www.piecesauto.com/common/seekCar?carid=";
-    private static $urlLink = "https://www.piecesauto.com";
 
     private $client;
 
@@ -61,21 +61,16 @@ class PiecesAuto
             $paCarId = $this->getCarID($v);
 
             if ($paCarId === null) {
-                return $this->getDefaultLink();
+                return self::$urlLink;
             };
 
             $paUri = $this->getUri($paCarId);
 
             if ($paUri === null) {
-                return $this->getDefaultLink();
+                return self::$urlLink;
             }
 
-            return $this->getDefaultLink() . $paUri;
+            return self::$urlLink . $paUri;
         });
-    }
-
-    private function getDefaultLink(): string
-    {
-        return self::$urlLink;
     }
 }
