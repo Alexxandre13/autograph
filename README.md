@@ -1,6 +1,6 @@
 # AUTOGraph
 
-Le projet est disponible à cette adresse : [https://autograph.alexandre-dosreis.me/](https://autograph.alexandre-dosreis.me/), j'héberge le projet sur mon serveur OVH.
+Ceci est un projet qui m'a été demandé pour un entretien d'embauche. Il s'agit d'un CRUD de véhicules avec appel d'Api externe.
 
 ## Cahier des charges
 
